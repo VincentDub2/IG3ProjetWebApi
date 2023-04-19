@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 
+
 const app = express();
 
 app.use(
@@ -21,3 +22,4 @@ const server = http.createServer(app);
 server.listen(8080, () => {
     console.log('Server is running on port 8080');
 });
+
