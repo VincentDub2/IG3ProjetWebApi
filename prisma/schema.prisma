@@ -134,8 +134,8 @@ model UserFavori {
   id      String @id @default(uuid()) @map("_id")
   user_id String
   food_id String
-  user    User   @relation(fields: [user_id], references: [id])
-  food    Food   @relation(fields: [food_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  food    Food   @relation(fields: [food_id], references: [id],onDelete: Cascade)
 
   @@unique([user_id, food_id])
 }
@@ -145,7 +145,7 @@ model Meal {
   id        String   @id @default(uuid()) @map("_id")
   user_id   String
   meal_type MealType
-  user      User     @relation(fields: [user_id], references: [id])
+  user      User     @relation(fields: [user_id], references: [id] ,onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   mealFood  MealFood[]
@@ -159,7 +159,6 @@ model MealFood {
   quantity  Int
   foodId    String
   mealId    String
-  food      Food   @relation(fields: [foodId], references: [id])
-  meal      Meal   @relation(fields: [mealId], references: [id])
-
+  food      Food   @relation(fields: [foodId], references: [id],onDelete: Cascade)
+  meal      Meal   @relation(fields: [mealId], references: [id],onDelete: Cascade)
 }

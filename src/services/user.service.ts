@@ -41,10 +41,30 @@ export const createOAuthUser = async (values: OAuthUserInput): Promise<UserWithA
   };
   
     
+  export async function updateAllUserById(id : string, updates : Record<string, any>) {
+    // fetch the user from the database
+    let user = await prisma.user.findUnique({
+      where: { id },
+    });
+    
+    // update the user
+    user = await prisma.user.update({
+      where: { id },
+      data: updates,
+    });
+    
+    return user;
+  }
+  
 
+  export const deleteUserById = async (id: string) => {
+    // disconnect or delete associated records here
+    // for example, to delete all associated accounts:
+    await prisma.account.deleteMany({ where: { userId: id } });
 
-export const deleteUserById = (id: string) => prisma.user.delete({ where: { id } });
-
+    // now delete the user
+    return prisma.user.delete({ where: { id } });
+};
 
 export const updateUserById = (id: string, values: Record<string, any>) => prisma.user.update({ where: { id }, data: values });
 

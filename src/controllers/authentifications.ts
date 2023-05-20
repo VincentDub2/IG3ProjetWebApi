@@ -88,8 +88,13 @@ export const login = async (req: express.Request, res: express.Response) => {
     await updateUserById(user.id, { sessionToken: token });
 
     // Ajouter le token à la réponse
-    res.cookie("Eattrack-Auth", token, { domain: "localhost", path: "/" });
-// httpOnly: true, secure: true }); // permet de sécuriser le cookie
+    res.cookie("Eattrack-Auth", token, {
+      domain: "localhost", 
+      path: "/",
+      httpOnly: true, // empêche l'accès au cookie via JavaScript côté client
+      secure: true, // assure que le cookie est envoyé seulement sur des connexions HTTPS
+      sameSite: 'strict' // assure que le cookie n'est envoyé que si la demande provient du même site
+    });
     return res.status(200).json(user).end();
   } catch (error) {
     console.log(error);
