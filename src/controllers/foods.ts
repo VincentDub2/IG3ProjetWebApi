@@ -50,6 +50,7 @@ const addFood = async (req: Request, res: Response) => {
     const userID = get(req, "identity.id");
 
     console.log("addFood: ", userID);
+    
     // Check if the brand already exists
     let brand = await prisma.brand.findFirst({
       where: { name: brandName },
