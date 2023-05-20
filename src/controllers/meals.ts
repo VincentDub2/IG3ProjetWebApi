@@ -55,7 +55,7 @@ const  addFoodToMeal =  async (req: Request, res: Response) =>{
         }
       });
 
-      return res.status(201).json(mealFood);
+      return res.status(200).json(mealFood);
 
     } catch (err) {
       console.error(err);
