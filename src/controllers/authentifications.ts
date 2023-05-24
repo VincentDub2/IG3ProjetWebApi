@@ -120,7 +120,7 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
     console.log(req.body);
 
     // Recherchez si le compte pour le fournisseur spécifique existe déjà
-    let account = await prisma.account.findFirst({
+    var account = await prisma.account.findFirst({
       where: {
         provider: provider,
         providerAccountId: id
@@ -187,8 +187,8 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
       });
 
       return res.status(200).json({ updatedUser, account });
-      
-      // Un utilisateur avec cet id existe déjà. Vous pouvez le mettre à jour ou gérer autrement ce cas.
+
+
     } else {
       
   // Créez un nouvel utilisateur
