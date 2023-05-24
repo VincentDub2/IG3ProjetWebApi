@@ -158,8 +158,40 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
       return;
     }
 
+    let existingUser = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    
+    if (existingUser) {
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          sessionToken: accessToken,
+          accounts: { 
+            create: {
+              provider: provider,
+              providerAccountId: providerId, // <= Add this line
+              type: 'oauth',
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            }
+          }
+        },
+        include: {
+          accounts: true
+        }
+      });
 
-    // Créez un nouvel utilisateur
+      return res.status(200).json({ updatedUser, account });
+      
+      // Un utilisateur avec cet id existe déjà. Vous pouvez le mettre à jour ou gérer autrement ce cas.
+    } else {
+      
+  // Créez un nouvel utilisateur
 
     const newUser = await prisma.user.create({
       data: {
@@ -187,7 +219,7 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
     console.log(newUser);
 
     return res.status(200).json({ newUser, account });
-
+  }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Une erreur est survenue lors de la création de l\'utilisateur et du compte' });
