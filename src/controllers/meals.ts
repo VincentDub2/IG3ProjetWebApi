@@ -59,7 +59,7 @@ const  addFoodToMeal =  async (req: Request, res: Response) =>{
           data: {
             user: {
               connect: {
-                id: userId
+                id: user.id
               }
             },
             meal_type: mealType,

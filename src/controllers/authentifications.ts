@@ -211,6 +211,7 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
         name,
         email,
         image,
+        id: id,
         sessionToken: accessToken,
         accounts: {
           create: {
