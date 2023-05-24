@@ -160,12 +160,13 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
 
 
     // Créez un nouvel utilisateur
+
     const newUser = await prisma.user.create({
       data: {
         name,
         email,
         image,
-        id: providerId,
+        id: id,
         sessionToken: accessToken,
         accounts: {
           create: {
@@ -185,7 +186,8 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
 
     console.log(newUser);
 
-    res.status(200).json({ newUser, account });
+    return res.status(200).json({ newUser, account });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Une erreur est survenue lors de la création de l\'utilisateur et du compte' });
