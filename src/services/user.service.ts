@@ -16,15 +16,9 @@ export const getUserBySessionTokenAndProvider = (sessionToken: string) => prisma
 export async function findUserByAccessToken(access_token: string) {
   const account = await prisma.account.findUnique({
       where: { access_token : access_token },
+      include: { user: true },
   });
-  // Ensuite, utilise l'userId pour trouver l'utilisateur
-  if (account) {
-      const user = await prisma.user.findUnique({
-          where: { id: account.userId },
-      });
-      return user;
-  }
-  return null;
+  return account?.user;
 }
 
 export const getUserById = (id: string) => prisma.user.findUnique({ where: { id } });
