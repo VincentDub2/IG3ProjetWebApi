@@ -158,11 +158,16 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
       return;
     }
 
-    let existingUser = await prisma.user.findUnique({
-      where: {
-        id: id,
-      },
-    });
+    let existingUser = null;
+    if (id) {
+      existingUser = await prisma.user.findUnique({
+        where: {
+          id: id,
+        },
+      });
+  
+    }
+  
     
     if (existingUser) {
       const updatedUser = await prisma.user.update({
