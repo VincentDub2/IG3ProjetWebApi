@@ -159,6 +159,7 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
     }
 
     let existingUser = null;
+
     if (id) {
       existingUser = await prisma.user.findUnique({
         where: {
@@ -167,12 +168,18 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
       });
   
     }
-  
-    
+    if (!existingUser){
+      existingUser = await prisma.user.findUnique({
+        where: {
+          email: email,
+        },
+    });
+    }
+      
     if (existingUser) {
       const updatedUser = await prisma.user.update({
         where: {
-          id: id,
+          id: existingUser.id,
         },
         data: {
           sessionToken: accessToken,
@@ -204,7 +211,6 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
         name,
         email,
         image,
-        id: id,
         sessionToken: accessToken,
         accounts: {
           create: {
