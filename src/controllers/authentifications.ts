@@ -185,6 +185,7 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
           accounts: true
         }
       });
+      console.log("existingUser",existingUser);
 
       return res.status(200).json({ updatedUser, account });
 
