@@ -14,9 +14,13 @@ const  addFoodToMeal =  async (req: Request, res: Response) =>{
       const endDate = new Date(date);
       endDate.setHours(23, 59, 59, 999); // end of the day
 
+      console.log("voici le body",req.body);
+
       var user = await prisma.user.findUnique({
         where: { id: userId },
       });
+
+      console.log("voici le user",user);
 
       if(!user){
         let account = await prisma.account.findUnique({
@@ -29,6 +33,8 @@ const  addFoodToMeal =  async (req: Request, res: Response) =>{
           user = account.user;
         }
       }
+
+      console.log("voici le user",user);
       
       if (!user) {
         // Handle the case where the user does not exist
