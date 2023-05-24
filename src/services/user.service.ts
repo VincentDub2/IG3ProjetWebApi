@@ -18,6 +18,7 @@ export async function findUserByAccessToken(access_token: string) {
       where: { access_token : access_token },
       include: { user: true },
   });
+  console.log("Account find look account: ",account);
   return account?.user;
 }
 
