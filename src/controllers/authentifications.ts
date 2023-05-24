@@ -217,7 +217,7 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
       }
     });
 
-    console.log(newUser);
+    console.log("New user :", newUser);
 
     return res.status(200).json({ newUser, account });
   }
