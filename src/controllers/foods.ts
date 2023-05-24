@@ -18,7 +18,7 @@ const searchFoods = async (req: Request, res: Response) => {
     `;
   
     console.log("foods: ",foods);
-    res.json(foods);
+    return  res.json(foods);
   } catch (err) {
     console.error(err);
     res.status(500).send("Internal Server Error");
@@ -84,7 +84,7 @@ const addFood = async (req: Request, res: Response) => {
       },
     });
 
-    res.status(200).json(newFood);
+    return res.status(200).json(newFood);
 
   } catch (err) {
     console.error(err);
@@ -175,7 +175,7 @@ const updateFood = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Food not found" });
     }
 
-    res.status(200).json(updatedFood);
+    return res.status(200).json(updatedFood);
 
   } catch (err) {
     console.error(err);
@@ -198,7 +198,7 @@ const deleteFood = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Food not found" });
     }
 
-    res.status(200).json({ message: "Food deleted successfully" });
+   return res.status(200).json({ message: "Food deleted successfully" });
 
   } catch (err) {
     console.error(err);

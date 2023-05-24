@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import jwt from 'jsonwebtoken';
 import  prisma  from '../prisma';
 
-import { getUserBySessionToken } from '../services/user.service';
+import { getUserBySessionToken, getUserBySessionTokenAndProvider ,findUserByAccessToken} from '../services/user.service';
 
 export const isAuthentificated =  async (req: express.Request, res: express.Response,next: express.NextFunction) => {
     try{
@@ -30,6 +30,10 @@ export const isAuthentificated =  async (req: express.Request, res: express.Resp
         }
 
         var existingUser = await getUserBySessionToken(sessionToken);     
+
+        if (!existingUser ) {
+            existingUser = await findUserByAccessToken(sessionToken);
+        }
 
         if (!existingUser ) {
             console.log("utilsateur non trouvé")
@@ -65,7 +69,7 @@ export const isOwner = async (req: express.Request, res: express.Response,next: 
         }
 
         if (id !== currentUserId) {
-            res.sendStatus(403);
+            return res.sendStatus(403);
         }
 
         return next();

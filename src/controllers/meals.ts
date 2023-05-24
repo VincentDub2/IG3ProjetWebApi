@@ -14,6 +14,28 @@ const  addFoodToMeal =  async (req: Request, res: Response) =>{
       const endDate = new Date(date);
       endDate.setHours(23, 59, 59, 999); // end of the day
 
+      var user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      if(!user){
+        let account = await prisma.account.findUnique({
+          where: { id: userId },
+          include: {
+            user: true
+          }
+        });
+        if(!account){
+          user = account.user;
+        }
+      }
+      
+      if (!user) {
+        // Handle the case where the user does not exist
+        console.log(`User with ID ${userId} does not exist`);
+        return;
+      }
+
       // Check if a meal of this type already exists for this date
       let meal = await prisma.meal.findFirst({
         where: {

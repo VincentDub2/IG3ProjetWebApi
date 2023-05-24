@@ -111,12 +111,14 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
     image,
     accessToken,
     refreshToken,
-    provider
+    provider,
+    providerId
   } = req.body;
 
   try {
 
     console.log(req.body);
+
     // Recherchez si le compte pour le fournisseur spécifique existe déjà
     let account = await prisma.account.findFirst({
       where: {
@@ -128,7 +130,7 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
       }
     });
 
-    console.log(account);
+    console.log("voici le compte",account);
 
     // Si le compte existe déjà, mettez à jour les informations du compte comment le token 
     if (account) {
@@ -147,10 +149,11 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
         );
     }
 
-    console.log(account);
+    console.log("update du compte",account);
 
     // Si le compte existe, renvoyer l'utilisateur et le compte
     if (account) {
+      console.log("account exist");
       res.status(200).json({ user: account.user, account });
       return;
     }
@@ -162,10 +165,12 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
         name,
         email,
         image,
+        id: providerId,
+        sessionToken: accessToken,
         accounts: {
           create: {
             provider: provider,
-            providerAccountId: id,
+            providerAccountId: providerId, // <= Add this line
             type: 'oauth',
             access_token: accessToken,
             refresh_token: refreshToken,

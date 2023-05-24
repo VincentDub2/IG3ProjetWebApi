@@ -1,5 +1,6 @@
 import express from 'express';
 import https from 'https';
+import http from 'http';
 import fs from 'fs';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -17,13 +18,16 @@ const app = express();
 
 app.use(
     cors({
-        origin: 'https://api.eattrack.net', // Remplacez par votre domaine
+        //origin: 'https://api.eattrack.net', // Remplacez par votre domaine
+        origin: 'http://localhost:3000',
         credentials: true,
     }));
 
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
+
+/*
 
 const privateKey = fs.readFileSync('/etc/letsencrypt/live/api.eattrack.net/privkey.pem', 'utf8');
 const certificate = fs.readFileSync('/etc/letsencrypt/live/api.eattrack.net/cert.pem', 'utf8');
@@ -36,6 +40,9 @@ const credentials = {
 };
 
 const server = https.createServer(credentials, app);
+*/
+
+const server = http.createServer(app);
 
 server.listen(8080, () => {
     console.log('Server is running on port 8080');

@@ -88,7 +88,7 @@ import { filterSensitiveData } from '../helpers';
           percentageFat, 
           percentageCarbs 
         });
-
+        console.log("voici le user",user);
         return res.status(200).json(user).end();
     }catch(error){
         console.log(error);
