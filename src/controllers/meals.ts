@@ -99,13 +99,34 @@ const  addFoodToMeal =  async (req: Request, res: Response) =>{
       startDate.setHours(0, 0, 0, 0); // beginning of the day
   
       const endDate = new Date(date);
+
       endDate.setHours(23, 59, 59, 999); // end of the day
+
+      var user = await prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      if(!user){
+        let account = await prisma.account.findUnique({
+          where: { id: userId },
+          include: {
+            user: true
+          }
+        });
+        if(!account){
+          user = account.user;
+        }
+      }
+
+      if(!user){
+        return res.status(400).json({ error: "User not found" });
+      }
   
       // Find all meals of this user for this date
       const meals = await prisma.meal.findMany({
         where: {
           AND: [
-            { user_id: userId },
+            { user_id: user.id},
             {
               createdAt: {
                 gte: startDate,
