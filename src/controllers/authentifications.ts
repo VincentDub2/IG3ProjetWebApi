@@ -219,7 +219,7 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
 
     console.log("New user :", newUser);
 
-    return res.status(200).json({ newUser, account });
+    return res.status(200).json({ newUser, accounts : newUser.accounts });
   }
   } catch (error) {
     console.error(error);
