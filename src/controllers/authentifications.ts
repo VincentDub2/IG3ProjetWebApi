@@ -148,16 +148,24 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
       return;
     }
 
-    // If account does not exist, find existing user by id or email
-    let existingUser = await prisma.user.findUnique({
-      where: { id: id },
-    });
-    
-    if (!existingUser) {
+    let existingUser = null;
+
+    if (id) {
       existingUser = await prisma.user.findUnique({
-        where: { email: email },
+        where: {
+          id: id,
+        },
       });
     }
+    
+    if (!existingUser && email) {
+      existingUser = await prisma.user.findUnique({
+        where: {
+          email: email,
+        },
+      });
+    }
+    
 
     // If user exists, create a new account and attach to this user
     if (existingUser) {
