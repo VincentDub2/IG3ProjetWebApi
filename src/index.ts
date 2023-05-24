@@ -18,8 +18,8 @@ const app = express();
 
 app.use(
     cors({
-        origin: 'https://eattrack.vercel.app', // Remplacez par votre domaine
-        //origin: 'http://localhost:3000',
+        origin: ['https://eattrack.vercel.app','http:localhost:3000'] ,// Remplacez par votre domaine
+    
         credentials: true,
     }));
 
