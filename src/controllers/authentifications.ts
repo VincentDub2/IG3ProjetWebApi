@@ -149,6 +149,19 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
         );
     }
 
+    account = await prisma.account.findFirst({
+      where: {
+        provider: provider,
+        providerAccountId: id
+      },
+      include: {
+        user: true
+      }
+    });
+
+
+
+
     console.log("update du compte",account);
 
     // Si le compte existe, renvoyer l'utilisateur et le compte
@@ -211,7 +224,6 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
         name,
         email,
         image,
-        id: id,
         sessionToken: accessToken,
         accounts: {
           create: {
