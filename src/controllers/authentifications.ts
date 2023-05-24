@@ -102,7 +102,6 @@ export const login = async (req: express.Request, res: express.Response) => {
   }
 };
 
-
 export const ExternalLogin = async (req: express.Request, res: express.Response) => {
   const {
     id,
@@ -116,10 +115,9 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
   } = req.body;
 
   try {
-
     console.log(req.body);
 
-    // Recherchez si le compte pour le fournisseur spécifique existe déjà
+    // Search if the account for the specific provider already exists
     var account = await prisma.account.findFirst({
       where: {
         provider: provider,
@@ -130,11 +128,7 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
       }
     });
 
-    console.log("acces token 1",accessToken);
-
-    console.log("voici le compte",account);
-
-    // Si le compte existe déjà, mettez à jour les informations du compte comment le token 
+    // If the account already exists, update the account details such as the token 
     if (account) {
       account = await prisma.account.update({
         where: {
@@ -147,114 +141,27 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
         include: {
           user: true
         }
-      }, 
-        );
-    }
+      });
 
-    console.log("acces token 2",accessToken);
-
-    account = await prisma.account.findFirst({
-      where: {
-        provider: provider,
-        providerAccountId: id
-      },
-      include: {
-        user: true
-      }
-    });
-
-
-
-
-    console.log("update du compte",account);
-    export const ExternalLogin = async (req: express.Request, res: express.Response) => {
-  const {
-    id,
-    name,
-    email,
-    image,
-    accessToken,
-    refreshToken,
-    provider,
-    providerId
-  } = req.body;
-
-  try {
-
-    console.log(req.body);
-
-    // Recherchez si le compte pour le fournisseur spécifique existe déjà
-    var account = await prisma.account.findFirst({
-      where: {
-        provider: provider,
-        providerAccountId: id
-      },
-      include: {
-        user: true
-      }
-    });
-
-    console.log("voici le compte",account);
-
-    // Si le compte existe déjà, mettez à jour les informations du compte comment le token 
-    if (account) {
-      account = await prisma.account.update({
-        where: {
-          id: account.id
-        },
-        data: {
-          access_token: accessToken,
-          refresh_token: refreshToken
-        },
-        include: {
-          user: true
-        }
-      }, 
-        );
-    }
-
-    account = await prisma.account.findFirst({
-      where: {
-        provider: provider,
-        providerAccountId: id
-      },
-      include: {
-        user: true
-      }
-    });
-
-
-
-
-    console.log("update du compte",account);
-
-    // Si le compte existe, renvoyer l'utilisateur et le compte
-    if (account) {
-      console.log("account exist");
+      // Return user and account
       res.status(200).json({ user: account.user, account });
       return;
     }
 
-    let existingUser = null;
-
-    if (id) {
-      existingUser = await prisma.user.findUnique({
-        where: {
-          id: id,
-        },
-      });
-  
-    }
-    if (!existingUser){
-      existingUser = await prisma.user.findUnique({
-        where: {
-          email: email,
-        },
+    // If account does not exist, find existing user by id or email
+    let existingUser = await prisma.user.findUnique({
+      where: { id: id },
     });
+    
+    if (!existingUser) {
+      existingUser = await prisma.user.findUnique({
+        where: { email: email },
+      });
     }
-      
+
+    // If user exists, create a new account and attach to this user
     if (existingUser) {
-      const updatedUser = await prisma.user.update({
+      existingUser = await prisma.user.update({
         where: {
           id: existingUser.id,
         },
@@ -263,7 +170,7 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
           accounts: { 
             create: {
               provider: provider,
-              providerAccountId: providerId, // <= Add this line
+              providerAccountId: providerId,
               type: 'oauth',
               access_token: accessToken,
               refresh_token: refreshToken,
@@ -274,104 +181,18 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
           accounts: true
         }
       });
-      console.log("existingUser",existingUser);
 
-      return res.status(200).json({ updatedUser, account });
-
-
-    } else {
+      const userAccounts = await prisma.account.findMany({
+        where: { userId: existingUser.id },
+      });
       
-  // Créez un nouvel utilisateur
-  console.log("acess token 3",accessToken);
 
-    const newUser = await prisma.user.create({
-      data: {
-        name,
-        email,
-        image,
-        sessionToken: accessToken,
-        accounts: {
-          create: {
-            provider: provider,
-            providerAccountId: providerId, // <= Add this line
-            type: 'oauth',
-            access_token: accessToken,
-            refresh_token: refreshToken,
-            // Remplissez les autres champs nécessaires ici
-          },
-        },
-      },
-      include: {
-        accounts: true
-      }
-    });
-
-    console.log("New user :", newUser);
-
-    return res.status(200).json({ newUser, accounts : newUser.accounts });
-  }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Une erreur est survenue lors de la création de l\'utilisateur et du compte' });
-  }
-};
-
-
-    // Si le compte existe, renvoyer l'utilisateur et le compte
-    if (account) {
-      console.log("account exist");
-      res.status(200).json({ user: account.user, account });
+      // Return updated user and his accounts
+      res.status(200).json({ user: existingUser, accounts: userAccounts });
       return;
     }
 
-    let existingUser = null;
-
-    if (id) {
-      existingUser = await prisma.user.findUnique({
-        where: {
-          id: id,
-        },
-      });
-  
-    }
-    if (!existingUser){
-      existingUser = await prisma.user.findUnique({
-        where: {
-          email: email,
-        },
-    });
-    }
-      
-    if (existingUser) {
-      const updatedUser = await prisma.user.update({
-        where: {
-          id: existingUser.id,
-        },
-        data: {
-          sessionToken: accessToken,
-          accounts: { 
-            create: {
-              provider: provider,
-              providerAccountId: providerId, // <= Add this line
-              type: 'oauth',
-              access_token: accessToken,
-              refresh_token: refreshToken,
-            }
-          }
-        },
-        include: {
-          accounts: true
-        }
-      });
-      console.log("existingUser",existingUser);
-
-      return res.status(200).json({ updatedUser, account });
-
-
-    } else {
-      
-  // Créez un nouvel utilisateur
-
+    // Create new user and account
     const newUser = await prisma.user.create({
       data: {
         name,
@@ -381,11 +202,11 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
         accounts: {
           create: {
             provider: provider,
-            providerAccountId: providerId, // <= Add this line
+            providerAccountId: providerId,
             type: 'oauth',
             access_token: accessToken,
             refresh_token: refreshToken,
-            // Remplissez les autres champs nécessaires ici
+            // Fill in the necessary other fields here
           },
         },
       },
@@ -394,14 +215,12 @@ export const ExternalLogin = async (req: express.Request, res: express.Response)
       }
     });
 
-    console.log("New user :", newUser);
+    // Return new user and his accounts
+    res.status(200).json({ user: newUser, accounts: newUser.accounts });
+    return;
 
-    return res.status(200).json({ newUser, accounts : newUser.accounts });
-  }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Une erreur est survenue lors de la création de l\'utilisateur et du compte' });
+    res.status(500).json({ error: 'An error occurred while creating the user and account' });
   }
 };
-
-
