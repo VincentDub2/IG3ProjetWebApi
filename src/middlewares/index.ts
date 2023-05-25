@@ -34,10 +34,6 @@ export const isAuthentificated =  async (req: express.Request, res: express.Resp
         var existingUser = await getUserBySessionToken(sessionToken);     
 
         if (!existingUser ) {
-            existingUser = await findUserByAccessToken(sessionToken);
-        }
-
-        if (!existingUser ) {
             console.log("utilsateur non trouvé")
             return res.sendStatus(402);
         }
