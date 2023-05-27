@@ -1,18 +1,26 @@
-import express from 'express' ;
+import express from 'express';
+import {
+    deleteUser,
+    getActualUser,
+    getAllUsers,
+    updateUser,
+    getUserFoods
+} from '../controllers/users';
+import { isAuthenticated, isOwner } from '../middlewares';
 
-import { deleteUser, getActualUser,getALLUsers,updateUser} from '../controllers/users';
-import { isAuthentificated, isOwner } from '../middlewares';
-import { updateAllUserById } from 'services/user.service';
-import { getUserFoods } from '../controllers/foods';
+export default (router: express.Router) => {
+    // Route pour récupérer tous les utilisateurs
+    router.get('/users', getAllUsers);
 
+    // Route pour récupérer l'utilisateur actuel (nécessite une authentification)
+    router.get('/user/actual', isAuthenticated, getActualUser);
 
+    // Route pour supprimer un utilisateur (nécessite une authentification et d'être le propriétaire de l'utilisateur)
+    router.delete('/userDel/:id', isAuthenticated, isOwner, deleteUser);
 
-export default (router : express.Router) => {
-    router.get('/users',getALLUsers);
-    router.get('/user/actual',isAuthentificated, getActualUser);
-    router.delete('/userDel/:id',isAuthentificated,isOwner, deleteUser);
-    router.post('/user/:id',isAuthentificated,updateUser);
-    router.get('/user/:id/foods',isAuthentificated,isOwner,getUserFoods);
+    // Route pour mettre à jour un utilisateur (nécessite une authentification)
+    router.post('/user/:id', isAuthenticated, updateUser);
 
+    // Route pour récupérer les aliments d'un utilisateur spécifique (nécessite une authentification et d'être le propriétaire de l'utilisateur)
+    router.get('/user/:id/foods', isAuthenticated, isOwner, getUserFoods);
 };
-
