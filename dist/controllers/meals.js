@@ -10,6 +10,28 @@ const addFoodToMeal = async (req, res) => {
         startDate.setHours(0, 0, 0, 0); // beginning of the day
         const endDate = new Date(date);
         endDate.setHours(23, 59, 59, 999); // end of the day
+        console.log("voici le body", req.body);
+        var user = await prisma.user.findUnique({
+            where: { id: userId },
+        });
+        console.log("voici le user", user);
+        if (!user) {
+            let account = await prisma.account.findUnique({
+                where: { id: userId },
+                include: {
+                    user: true
+                }
+            });
+            if (!account) {
+                user = account.user;
+            }
+        }
+        console.log("voici le user", user);
+        if (!user) {
+            // Handle the case where the user does not exist
+            console.log(`User with ID ${userId} does not exist`);
+            return;
+        }
         // Check if a meal of this type already exists for this date
         let meal = await prisma.meal.findFirst({
             where: {
@@ -32,7 +54,7 @@ const addFoodToMeal = async (req, res) => {
                 data: {
                     user: {
                         connect: {
-                            id: userId
+                            id: user.id
                         }
                     },
                     meal_type: mealType,
@@ -66,11 +88,28 @@ const getFoodsEatenOnDay = async (req, res) => {
         startDate.setHours(0, 0, 0, 0); // beginning of the day
         const endDate = new Date(date);
         endDate.setHours(23, 59, 59, 999); // end of the day
+        var user = await prisma.user.findUnique({
+            where: { id: userId },
+        });
+        if (!user) {
+            let account = await prisma.account.findUnique({
+                where: { id: userId },
+                include: {
+                    user: true
+                }
+            });
+            if (!account) {
+                user = account.user;
+            }
+        }
+        if (!user) {
+            return res.status(400).json({ error: "User not found" });
+        }
         // Find all meals of this user for this date
         const meals = await prisma.meal.findMany({
             where: {
                 AND: [
-                    { user_id: userId },
+                    { user_id: user.id },
                     {
                         createdAt: {
                             gte: startDate,

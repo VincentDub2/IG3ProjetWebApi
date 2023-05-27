@@ -20,7 +20,7 @@ const searchFoods = async (req, res) => {
         OR Food.barcode = ${query}
     `;
         console.log("foods: ", foods);
-        res.json(foods);
+        return res.json(foods);
     }
     catch (err) {
         console.error(err);
@@ -64,7 +64,7 @@ const addFood = async (req, res) => {
                 userId: userID,
             },
         });
-        res.status(200).json(newFood);
+        return res.status(200).json(newFood);
     }
     catch (err) {
         console.error(err);
@@ -128,7 +128,7 @@ const updateFood = async (req, res) => {
         if (!updatedFood) {
             return res.status(404).json({ message: "Food not found" });
         }
-        res.status(200).json(updatedFood);
+        return res.status(200).json(updatedFood);
     }
     catch (err) {
         console.error(err);
@@ -146,7 +146,7 @@ const deleteFood = async (req, res) => {
         if (!deletedFood) {
             return res.status(404).json({ message: "Food not found" });
         }
-        res.status(200).json({ message: "Food deleted successfully" });
+        return res.status(200).json({ message: "Food deleted successfully" });
     }
     catch (err) {
         console.error(err);

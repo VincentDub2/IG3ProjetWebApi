@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getALLUsers = exports.deleteUser = exports.updateUser = exports.getActualUser = void 0;
+exports.getAllUsers = exports.deleteUser = exports.updateUser = exports.getActualUser = void 0;
 const user_service_1 = require("../services/user.service");
 const user_service_2 = require("../services/user.service");
 const helpers_1 = require("../helpers");
@@ -61,6 +61,7 @@ const updateUser = async (req, res) => {
             percentageFat,
             percentageCarbs
         });
+        console.log("voici le user", user);
         return res.status(200).json(user).end();
     }
     catch (error) {
@@ -81,7 +82,7 @@ const deleteUser = async (req, res) => {
     }
 };
 exports.deleteUser = deleteUser;
-const getALLUsers = async (req, res) => {
+const getAllUsers = async (req, res) => {
     try {
         const users = await (0, user_service_2.getUsers)();
         return res.status(200).json(users).end();
@@ -91,5 +92,5 @@ const getALLUsers = async (req, res) => {
         return res.sendStatus(400);
     }
 };
-exports.getALLUsers = getALLUsers;
+exports.getAllUsers = getAllUsers;
 //# sourceMappingURL=users.js.map

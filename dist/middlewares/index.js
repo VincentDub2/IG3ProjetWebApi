@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isOwnerOfFood = exports.isOwner = exports.isAuthentificated = void 0;
+exports.isOwnerOfFood = exports.isOwner = exports.isAuthenticated = void 0;
 const lodash_1 = require("lodash");
 const prisma_1 = __importDefault(require("../prisma"));
 const user_service_1 = require("../services/user.service");
-const isAuthentificated = async (req, res, next) => {
+const isAuthenticated = async (req, res, next) => {
     try {
         var sessionToken = req.cookies['Eattrack-Auth'];
         // Check for Authorization header if no cookie was found
@@ -26,6 +26,7 @@ const isAuthentificated = async (req, res, next) => {
             //console.log("verifcation: ",req);
             return res.sendStatus(403);
         }
+        console.log("token : ", sessionToken);
         var existingUser = await (0, user_service_1.getUserBySessionToken)(sessionToken);
         if (!existingUser) {
             console.log("utilsateur non trouvé");
@@ -39,7 +40,7 @@ const isAuthentificated = async (req, res, next) => {
         return res.sendStatus(400);
     }
 };
-exports.isAuthentificated = isAuthentificated;
+exports.isAuthenticated = isAuthenticated;
 const isOwner = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -51,7 +52,7 @@ const isOwner = async (req, res, next) => {
             return res.sendStatus(403);
         }
         if (id !== currentUserId) {
-            res.sendStatus(403);
+            return res.sendStatus(403);
         }
         return next();
     }

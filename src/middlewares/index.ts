@@ -6,7 +6,7 @@ import  prisma  from '../prisma';
 
 import { getUserBySessionToken, getUserBySessionTokenAndProvider ,findUserByAccessToken} from '../services/user.service';
 
-export const isAuthentificated =  async (req: express.Request, res: express.Response,next: express.NextFunction) => {
+export const isAuthenticated =  async (req: express.Request, res: express.Response,next: express.NextFunction) => {
     try{
         var sessionToken = req.cookies['Eattrack-Auth'];
     

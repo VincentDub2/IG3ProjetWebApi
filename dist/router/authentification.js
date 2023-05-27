@@ -10,8 +10,11 @@ const limiter = (0, express_rate_limit_1.default)({
     max: 100 // limite chaque IP à 100 requêtes par fenêtre
 });
 exports.default = (router) => {
+    // Route pour l'inscription des utilisateurs
     router.post('/auth/register', authentifications_1.register);
+    // Route pour la connexion des utilisateurs avec un taux de limite
     router.post('/auth/login', limiter, authentifications_1.login);
-    router.post("/auth/socialLog", authentifications_1.ExternalLogin);
+    // Route pour la connexion externe des utilisateurs (ex: via les médias sociaux)
+    router.post('/auth/socialLog', authentifications_1.ExternalLogin);
 };
 //# sourceMappingURL=authentification.js.map

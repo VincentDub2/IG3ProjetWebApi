@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserByProviderAccountId = exports.updateUserById = exports.deleteUserById = exports.updateAllUserById = exports.createOAuthUser = exports.createUser = exports.getUserById = exports.getUserBySessionToken = exports.getUserByEmail = exports.getUsers = void 0;
+exports.getUserByProviderAccountId = exports.updateUserById = exports.deleteUserById = exports.updateAllUserById = exports.createOAuthUser = exports.createUser = exports.getUserById = exports.findUserByAccessToken = exports.getUserBySessionTokenAndProvider = exports.getUserBySessionToken = exports.getUserByEmail = exports.getUsers = void 0;
 const prisma_1 = __importDefault(require("../prisma"));
 // User Actions
 const getUsers = () => prisma_1.default.user.findMany();
@@ -13,6 +13,17 @@ const getUserByEmail = (email) => prisma_1.default.user.findUnique({ where: { em
 exports.getUserByEmail = getUserByEmail;
 const getUserBySessionToken = (sessionToken) => prisma_1.default.user.findUnique({ where: { sessionToken: sessionToken } });
 exports.getUserBySessionToken = getUserBySessionToken;
+const getUserBySessionTokenAndProvider = (sessionToken) => prisma_1.default.user.findUnique({ where: { sessionToken: sessionToken } });
+exports.getUserBySessionTokenAndProvider = getUserBySessionTokenAndProvider;
+async function findUserByAccessToken(access_token) {
+    const account = await prisma_1.default.account.findUnique({
+        where: { id: access_token },
+        include: { user: true },
+    });
+    console.log("Account find look account: ", account);
+    return account;
+}
+exports.findUserByAccessToken = findUserByAccessToken;
 const getUserById = (id) => prisma_1.default.user.findUnique({ where: { id } });
 exports.getUserById = getUserById;
 const createUser = (values) => prisma_1.default.user.create({ data: values });

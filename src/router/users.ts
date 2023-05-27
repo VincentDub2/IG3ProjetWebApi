@@ -4,8 +4,8 @@ import {
     getActualUser,
     getAllUsers,
     updateUser,
-    getUserFoods
 } from '../controllers/users';
+import {  getUserFoods} from '../controllers/foods';
 import { isAuthenticated, isOwner } from '../middlewares';
 
 export default (router: express.Router) => {
