@@ -6,6 +6,6 @@ exports.default = (router) => {
     // Route pour récupérer toutes les marques
     router.get('/brands', brands_1.allBrand);
     // Route pour ajouter une marque (nécessite une authentification)
-    router.post('/brands/add', middlewares_1.isAuthentificated, brands_1.addBrand);
+    router.post('/brands/add', middlewares_1.isAuthenticated, brands_1.addBrand);
 };
 //# sourceMappingURL=foods.js.map

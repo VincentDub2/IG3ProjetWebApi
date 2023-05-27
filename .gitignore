@@ -1,3 +1,6 @@
+#Permet d'ignorer les fichiers et dossiers suivants
+
 node_modules
-# Keep environment variables out of version control
-.env
+
+#Fichiers avec clefs d'API ou autres informations sensibles
+.env 
