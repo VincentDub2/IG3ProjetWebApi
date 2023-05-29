@@ -1,11 +1,14 @@
-import express from 'express';
-import { addBrand, allBrand } from '../controllers/brands';
-import { isAuthenticated, isOwner } from '../middlewares';
+import express from 'express' ;
 
-export default (router: express.Router) => {
-    // Route pour récupérer toutes les marques
-    router.get('/brands', allBrand);
+import { addFood, searchFoods,updateFood,deleteFood } from '../controllers/foods';
+import { isAuthenticated,isOwnerOfFood  } from '../middlewares';
 
-    // Route pour ajouter une marque (nécessite une authentification)
-    router.post('/brands/add', isAuthenticated, addBrand);
+
+
+export default (router : express.Router) => {
+    router.get("/food/search", searchFoods);
+    router.post("/food/add",isAuthenticated,addFood);
+    router.put("/food/:id",isAuthenticated,isOwnerOfFood,updateFood);
+    router.delete("/food/:id",isAuthenticated,isOwnerOfFood,deleteFood);
 };
+
