@@ -1,82 +1,107 @@
-# eattrack api
+# EatTrack API
 
-## Description
+Welcome to the official repository for the EatTrack API, serving as the reliable backbone of the EatTrack application. This API follows the principles of REST architecture and is developed using a tech stack that includes Node.js, Express, and Prisma.io. It is hosted on Amazon's cloud computing service AWS EC2 and employs an SQL database to manage and store information.
 
-This is the backend for the EatTrack app. It is a RESTful API built with Node.js, Express, and Prisma.io . It is deployed on AWS EC2 and uses a SQL database.
+## 🚀 Getting Started
 
-## Installation
+Here are the instructions to set up the EatTrack API in your local environment.
 
-To install this app, clone the repo and run `npm install` to install the dependencies. You will need to create a `.env` file with the following variables:
+### 📥 Installation
 
-```
-DATABASE_URL="mysql://<username>:<password>@<host>:<port>/<database>?schema=<schema>"
-JWT_SECRET=<secret>
-```
+1. Clone the repository to your local machine.
 
-```
-run `npx prisma migrate dev --name init` to create the database tables.
-```
+    ```bash
+    git clone https://github.com/VincentDub2/IG3ProjetFront.git
+    ```
 
-## Running the app
+2. Install the necessary dependencies.
 
-```
-npm start
-```
+    ```bash
+    npm install
+    ```
 
-## Building the app
+3. Create a `.env` file in your root directory and fill it with your configuration settings. Here's an example:
 
-```
-npm run build
-```
+    ```bash
+    DATABASE_URL="mysql://<username>:<password>@<host>:<port>/<database>?schema=<schema>"
+    JWT_SECRET=<your_secret_key>
+    ```
 
-## Usage
+4. Execute the following command to generate the database tables:
 
-The app is deployed on AWS EC2 at https://api.eattrack.app:8080
-You can use the endpoints below to interact with the API.
+    ```bash
+    npx prisma migrate dev --name init
+    ```
 
-## Endpoints
+### 🏃‍♀️ Running the API
 
-### Authentication
+To start the application, use the following command:
 
-#### POST /auth/register
+    ```bash
+    npm start
+    ```
 
-Register a new user.
+### 🏗️ Building the API
 
-#### POST /auth/login
+To build the application, use the following command:
 
+    ```bash
+    npm run build
+    ```
 
-### Users
+## 🌐 Usage
 
-For updating a user 
+The API is deployed at the following URL: https://api.eattrack.app:8080
 
-#### POST /user/:id
+Here is an overview of the available endpoints:
 
-For getting a user
+### 🔒 Authentication
 
-#### GET /user/actual
+- Register a new user: `POST /auth/register`
+- User login: `POST /auth/login`
 
-For get food from a user
+### 👥 Users
 
-#### GET /user/:id/foods
+- Update a user: `POST /user/:id`
+- Get the current user: `GET /user/actual`
+- Get food items associated with a user: `GET /user/:id/foods`
+- Delete a user: `DELETE /userDel/:id`
 
-For delete a user
+### 🍲 Foods
 
-#### DELETE /userDel/:id
-
-### Foods
-
-### GET /food/search
-
+- Search for a food item: `GET /food/search`  
 Example: https://api.eattrack.app:8080/food/search?query=apple
+- Add a new food item: `POST /food/add`
+- Update a food item: `PUT /food/:id`
+- Delete a food item: `DELETE /food/:id`
 
+### 🍽️ Meals
 
-### POST /food/add
+- Add a meal: `POST /meal/add`
+- Get meals for a user on a specific date: `GET /meals/:userId/:date`
 
+### 🏢 Brands
 
-For update a food
+- Add a new brand: `POST /brands/add`
+- Retrieve all brands: `GET /brands`
 
-### PUT /food/:id
+## 📦 Dependencies
 
-For delete a food
+This project relies on several packages, including:
 
-### DELETE /food/:id
+- bcryptjs
+- cors
+- dotenv
+- express
+- jsonwebtoken
+- mysql2
+- prisma
+- typescript
+
+## 👨‍💻 Author
+
+Vincent Dubuc
+
+## 📄 License
+
+This project was created for an engineering course at Polytech Montpellier and is licensed under the [MIT License](LICENSE).
