@@ -51,7 +51,7 @@ To build the application, use the following command:
 
 ## 🌐 Usage
 
-The API is deployed at the following URL: https://api.eattrack.app:8080
+The API is deployed at the following URL: https://api.eattrack.net:8080
 
 Here is an overview of the available endpoints:
 
