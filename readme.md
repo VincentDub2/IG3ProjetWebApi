@@ -70,7 +70,7 @@ Here is an overview of the available endpoints:
 ### 🍲 Foods
 
 - Search for a food item: `GET /food/search`  
-Example: https://api.eattrack.app:8080/food/search?query=apple
+Example: https://api.eattrack.net:8080/food/search?query=apple
 - Add a new food item: `POST /food/add`
 - Update a food item: `PUT /food/:id`
 - Delete a food item: `DELETE /food/:id`
